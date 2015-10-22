@@ -159,19 +159,26 @@ ofphdrs_decode(struct ofphdrs *hdrs,
 
         ovh = (const struct ofp_vendor_header *) oh;
         hdrs->vendor = ntohl(ovh->vendor);
-        if (hdrs->vendor == NX_VENDOR_ID) {
-            /* Get Nicira message subtype (NXT_*). */
-            const struct nicira_header *nh;
+        switch (hdrs->vendor)
+        {
+            case NX_VENDOR_ID:
+                /* Get Nicira message subtype (NXT_*). */
+                const struct nicira_header *nh;
 
-            if (length < sizeof *nh) {
-                return OFPERR_OFPBRC_BAD_LEN;
-            }
-            nh = (const struct nicira_header *) oh;
-            hdrs->subtype = ntohl(nh->subtype);
-        } else {
-            log_bad_vendor(hdrs->vendor);
-            return OFPERR_OFPBRC_BAD_VENDOR;
+                if (length < sizeof *nh) {
+                    return OFPERR_OFPBRC_BAD_LEN;
+                }
+                nh = (const struct nicira_header *) oh;
+                hdrs->subtype = ntohl(nh->subtype);
+                break;
+            case FREWSDN_VENDOR_ID:
+                // todo: Fazer o que ?
+                break;
+            default:
+                log_bad_vendor(hdrs->vendor);
+                return OFPERR_OFPBRC_BAD_VENDOR;
         }
+
     } else if (hdrs->version == OFP10_VERSION
                && (hdrs->type == OFPT10_STATS_REQUEST ||
                    hdrs->type == OFPT10_STATS_REPLY)) {
@@ -194,18 +201,25 @@ ofphdrs_decode(struct ofphdrs *hdrs,
 
             ovsm = (const struct ofp10_vendor_stats_msg *) oh;
             hdrs->vendor = ntohl(ovsm->vendor);
-            if (hdrs->vendor == NX_VENDOR_ID) {
-                /* Get Nicira statistic type (NXST_*). */
-                const struct nicira10_stats_msg *nsm;
+            switch (hdrs->vendor)
+            {
+                case NX_VENDOR_ID:
+                    /* Get Nicira statistic type (NXST_*). */
+                    const struct nicira10_stats_msg *nsm;
 
-                if (length < sizeof *nsm) {
-                    return OFPERR_OFPBRC_BAD_LEN;
-                }
-                nsm = (const struct nicira10_stats_msg *) oh;
-                hdrs->subtype = ntohl(nsm->subtype);
-            } else {
-                log_bad_vendor(hdrs->vendor);
-                return OFPERR_OFPBRC_BAD_VENDOR;
+                    if (length < sizeof *nsm) {
+                        return OFPERR_OFPBRC_BAD_LEN;
+                    }
+                    nsm = (const struct nicira10_stats_msg *) oh;
+                    hdrs->subtype = ntohl(nsm->subtype);
+                    break;
+                case FREWSDN_VENDOR_ID:
+                    // todo: Fazer o que ?
+                    break;
+                default:
+                    log_bad_vendor(hdrs->vendor);
+                    return OFPERR_OFPBRC_BAD_VENDOR;
+                    break;
             }
         }
     } else if (hdrs->version != OFP10_VERSION
@@ -230,18 +244,25 @@ ofphdrs_decode(struct ofphdrs *hdrs,
 
             ovsm = (const struct ofp11_vendor_stats_msg *) oh;
             hdrs->vendor = ntohl(ovsm->vendor);
-            if (hdrs->vendor == NX_VENDOR_ID) {
-                /* Get Nicira statistic type (NXST_*). */
-                const struct nicira11_stats_msg *nsm;
+            switch(hdrs->vendor)
+            {
+                case NX_VENDOR_ID:
+                    /* Get Nicira statistic type (NXST_*). */
+                    const struct nicira11_stats_msg *nsm;
 
-                if (length < sizeof *nsm) {
-                    return OFPERR_OFPBRC_BAD_LEN;
-                }
-                nsm = (const struct nicira11_stats_msg *) oh;
-                hdrs->subtype = ntohl(nsm->subtype);
-            } else {
-                log_bad_vendor(hdrs->vendor);
-                return OFPERR_OFPBRC_BAD_VENDOR;
+                    if (length < sizeof *nsm) {
+                        return OFPERR_OFPBRC_BAD_LEN;
+                    }
+                    nsm = (const struct nicira11_stats_msg *) oh;
+                    hdrs->subtype = ntohl(nsm->subtype);
+                    break;
+                case FREWSDN_VENDOR_ID:
+                    // todo: Fazer o que ?
+                    break;
+                default:
+                    log_bad_vendor(hdrs->vendor);
+                    return OFPERR_OFPBRC_BAD_VENDOR;
+                    break;
             }
         }
     }

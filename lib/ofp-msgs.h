@@ -26,7 +26,7 @@
  *   - "Statistics" (aka multipart) messages have a different format from other
  *     messages.
  *
- *   - The 1.0 header for statistics messages is an odd number of 32-bit words
+ *   - The 1.0 header for statistics messages is an odd number of 32-bit wordsfx
  *     long, leaving 64-bit quantities in the body misaligned.  The 1.1 header
  *     for statistics added a padding word to fix this misalignment, although
  *     many statistic message bodies did not change.
@@ -443,6 +443,18 @@ enum ofpraw {
 
     /* NXT 1.0+ (26): struct nx_geneve_table_reply, struct nx_geneve_map[]. */
     OFPRAW_NXT_GENEVE_TABLE_REPLY,
+
+/* FREWSDN extension messages
+ *
+ */
+    /* FREWSDN 1.0: struct of_frewsdn_information_request_all */
+    OFPRAW_FREWSDN_INFORMATION_REQUEST_ALL,
+
+    /* FREWSDN 1.0: struct of_frewsdn_information_request_port */
+    OFPRAW_FREWSDN_INFORMATION_REQUEST_PORT,
+
+    /* FREWSDN 1.0: struct of_frewsdn_information_response */
+    OFPRAW_FREWSDN_INFORMATION_RESPONSE,
 };
 
 /* Decoding messages into OFPRAW_* values. */
